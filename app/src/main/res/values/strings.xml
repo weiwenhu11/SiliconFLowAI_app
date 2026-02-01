@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">硅基流AI助手</string>
+    <string name="hint_input_message">输入消息...</string>
+    <string name="button_send">发送</string>
+    <string name="button_save">保存</string>
+    <string name="button_cancel">取消</string>
+    <string name="dialog_title_config">API配置</string>
+    <string name="label_provider">选择服务商:</string>
+    <string name="label_api_url">API地址:</string>
+    <string name="label_api_key">API密钥:</string>
+    <string name="label_model">模型名称:</string>
+    <string name="hint_api_url">https://api.siliconflow.cn/v1/chat/completions</string>
+    <string name="hint_api_key">输入您的API密钥</string>
+    <string name="hint_model">例如: deepseek-ai/DeepSeek-R1</string>
+    <string name="toast_config_saved">配置已保存</string>
+    <string name="toast_api_key_empty">API密钥不能为空</string>
+    <string name="toast_api_url_empty">API地址不能为空</string>
+    <string name="message_thinking">思考中...</string>
+    <string name="error_parse_failed">解析响应失败</string>
+</resources>
