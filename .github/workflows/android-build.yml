@@ -1,55 +1,44 @@
-name: Android CI
+name: Android Build APK
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
   workflow_dispatch:  # 允许手动触发
+  push:
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
     
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-    
+        
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-    
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-    
-    - name: Build with Gradle
+      
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+      
+    - name: Build Debug APK
       run: ./gradlew assembleDebug
-    
-    - name: Upload APK artifact
+      
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: siliconflow-ai-app
-        path: app/build/outputs/apk/debug/app-debug.apk
-    
-    - name: Create Release and Upload APK
-      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: siliconflow-apk
+        path: app/build/outputs/apk/debug/*.apk
+        retention-days: 7
+        
+    - name: Display APK info
       run: |
-        # 获取最新版本标签
-        LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
-        NEW_TAG=$(echo $LATEST_TAG | awk -F. '{printf "v%d.%d.%d", $1, $2, $3+1}')
-        
-        # 创建Git标签
-        git tag $NEW_TAG
-        git push origin $NEW_TAG
-        
-        # 创建Release并上传APK
-        gh release create $NEW_TAG \
-          --title "Silicon Flow AI App $NEW_TAG" \
-          --notes "Android APK for Silicon Flow AI Chat Application" \
-          app/build/outputs/apk/debug/app-debug.apk
+        echo "APK构建完成！"
+        find app/build/outputs/apk -name "*.apk" -type f | while read apk; do
+          echo "APK文件: $apk"
+          ls -lh "$apk"
+        done
